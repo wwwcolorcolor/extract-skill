@@ -6,9 +6,25 @@ This is not summarization. This is extraction of transferable intelligence.
 
 ## Prerequisites
 
-None. This skill uses Claude Code's built-in tools only — no external dependencies.
+**Required for YouTube:**
 
-For YouTube transcript extraction, the [youtube-transcript MCP server](https://github.com/nicobailon/mcp-youtube-transcript) is recommended but optional. Install it via Claude Code's MCP settings if you want YouTube support.
+```bash
+# macOS
+brew install yt-dlp
+
+# or
+pip install yt-dlp
+```
+
+**Optional:** For YouTube videos without captions (rare), audio transcription falls back to Groq Whisper:
+
+```bash
+export GROQ_API_KEY=your_key_here
+```
+
+Get one free at [console.groq.com](https://console.groq.com).
+
+**Articles, local files, PDFs** — no dependencies needed.
 
 ## Install
 
@@ -40,7 +56,7 @@ claude skill list
 
 ## What it does
 
-Give it a URL or file path. It fetches the content using built-in tools, assesses quality, and extracts structured knowledge across these categories:
+Give it a URL or file path. It fetches the content, assesses quality, and extracts structured knowledge across these categories:
 
 - **Mental Models & Frameworks** — decision-making heuristics, expert lenses
 - **Systematic Methods & Processes** — step-by-step techniques, playbooks, workflows
@@ -62,3 +78,14 @@ Shallow content gets called out. Depth of extraction matches depth of source.
 - Reasoning behind tool/approach choices (selection criteria outlive specific tools)
 - Prediction reasoning chains
 - Historical context explaining why something works the way it does
+
+## Troubleshooting
+
+**"yt-dlp: command not found"**
+Install it: `brew install yt-dlp` or `pip install yt-dlp`
+
+**YouTube extraction returns empty**
+Some videos have no captions. Set `GROQ_API_KEY` for audio transcription fallback.
+
+**WebFetch returns thin content for an article**
+Some sites block automated fetching. Try `/extract` with a local copy of the text instead.

@@ -6,7 +6,7 @@ description: >
   (2) user shares a URL or file and wants the key insights pulled out,
   (3) user wants to learn from a video, article, or podcast without reading/watching the whole thing.
   NOT for: summarization, news digests, or content that doesn't contain transferable knowledge.
-  No external dependencies — uses built-in tools only.
+  Requires: yt-dlp (for YouTube).
 user_invocable: true
 trigger: /extract
 arguments:
@@ -23,12 +23,39 @@ Extract durable knowledge — frameworks, methodologies, mental models, systemat
 
 ### Step 1: Identify source type and fetch content
 
-Detect the source type and use the appropriate built-in tool:
+Detect the source type and use the appropriate method:
 
 **YouTube video** (URL contains `youtube.com` or `youtu.be`):
-Use the `mcp__youtube-transcript__get-transcript` tool with `include_timestamps: false` to get the raw transcript.
+Extract the video ID from the URL, then fetch subtitles with yt-dlp:
 
-**Web article / blog / page** (any other URL):
+```bash
+yt-dlp --write-auto-sub --sub-lang "en" --skip-download --sub-format vtt -o "/tmp/yt-%(id)s" "<url>" 2>/dev/null && cat /tmp/yt-*<video_id>*.vtt 2>/dev/null
+```
+
+If that fails (no captions available), download audio and note that transcription isn't available:
+
+```bash
+yt-dlp -x --audio-format mp3 -o "/tmp/yt-%(id)s.%(ext)s" "<url>" 2>/dev/null
+```
+
+Then transcribe via Groq Whisper if user has `GROQ_API_KEY` set:
+
+```bash
+curl -s https://api.groq.com/openai/v1/audio/transcriptions \
+  -H "Authorization: Bearer $GROQ_API_KEY" \
+  -F "file=@/tmp/yt-<video_id>.mp3" \
+  -F "model=whisper-large-v3-turbo"
+```
+
+If neither path works, tell the user and stop.
+
+Clean up temp files after extraction:
+
+```bash
+rm -f /tmp/yt-<video_id>* 2>/dev/null
+```
+
+**Web article / blog / page** (any HTTP/HTTPS URL that is not YouTube):
 Use the `WebFetch` tool with the prompt: "Return the complete text content of this page. Preserve all details, quotes, examples, and structure. Do not summarize."
 
 **Local file** (file path):
