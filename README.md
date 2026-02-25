@@ -6,30 +6,9 @@ This is not summarization. This is extraction of transferable intelligence.
 
 ## Prerequisites
 
-This skill depends on the [`summarize`](https://github.com/steipete/summarize) CLI for content fetching:
+None. This skill uses Claude Code's built-in tools only — no external dependencies.
 
-```bash
-# Requires Node.js 22+
-npm install -g @steipete/summarize
-```
-
-**Optional:** For audio/video transcription (YouTube without captions, podcasts), you need a Groq API key:
-
-```bash
-export GROQ_API_KEY=your_key_here
-```
-
-Get one free at [console.groq.com](https://console.groq.com). Not needed for articles, web pages, or YouTube videos with captions.
-
-**Optional:** For YouTube videos where captions aren't available:
-
-```bash
-# macOS
-brew install yt-dlp
-
-# or
-pip install yt-dlp
-```
+For YouTube transcript extraction, the [youtube-transcript MCP server](https://github.com/nicobailon/mcp-youtube-transcript) is recommended but optional. Install it via Claude Code's MCP settings if you want YouTube support.
 
 ## Install
 
@@ -43,13 +22,11 @@ Verify it installed:
 claude skill list
 ```
 
-You should see `extract` in the output.
-
 ## Usage
 
 ```
-/extract <url>           — extract from a YouTube video, article, or podcast
-/extract <file_path>     — extract from a local file
+/extract <url>           — extract from a YouTube video or article
+/extract <file_path>     — extract from a local file or PDF
 ```
 
 ### Examples
@@ -58,11 +35,12 @@ You should see `extract` in the output.
 /extract https://www.youtube.com/watch?v=dQw4w9WgXcQ
 /extract https://paulgraham.com/greatwork.html
 /extract ./transcript.txt
+/extract ./research-paper.pdf
 ```
 
 ## What it does
 
-Give it a URL or file path. It pulls the raw content, assesses quality, and extracts structured knowledge across these categories:
+Give it a URL or file path. It fetches the content using built-in tools, assesses quality, and extracts structured knowledge across these categories:
 
 - **Mental Models & Frameworks** — decision-making heuristics, expert lenses
 - **Systematic Methods & Processes** — step-by-step techniques, playbooks, workflows
@@ -84,14 +62,3 @@ Shallow content gets called out. Depth of extraction matches depth of source.
 - Reasoning behind tool/approach choices (selection criteria outlive specific tools)
 - Prediction reasoning chains
 - Historical context explaining why something works the way it does
-
-## Troubleshooting
-
-**"summarize: command not found"**
-Install it: `npm install -g @steipete/summarize`
-
-**YouTube extraction fails**
-Try installing yt-dlp (`brew install yt-dlp`) — some videos need it as a fallback.
-
-**Empty output from audio/video**
-You probably need a `GROQ_API_KEY` for transcription. Get one at [console.groq.com](https://console.groq.com).

@@ -6,12 +6,12 @@ description: >
   (2) user shares a URL or file and wants the key insights pulled out,
   (3) user wants to learn from a video, article, or podcast without reading/watching the whole thing.
   NOT for: summarization, news digests, or content that doesn't contain transferable knowledge.
-  Requires: `summarize` CLI (`npm i -g @steipete/summarize`).
+  No external dependencies — uses built-in tools only.
 user_invocable: true
 trigger: /extract
 arguments:
   - name: source
-    description: URL (YouTube, article, podcast) or file path to extract from
+    description: URL (YouTube, article) or file path to extract from
     required: true
 ---
 
@@ -21,20 +21,23 @@ Extract durable knowledge — frameworks, methodologies, mental models, systemat
 
 ## Workflow
 
-### Step 1: Extract raw content
+### Step 1: Identify source type and fetch content
 
-Run the `summarize` CLI in extract-only mode to pull raw text without any LLM processing:
+Detect the source type and use the appropriate built-in tool:
 
-```bash
-summarize --extract "<source_url_or_path>" --timeout 3m 2>/dev/null
-```
+**YouTube video** (URL contains `youtube.com` or `youtu.be`):
+Use the `mcp__youtube-transcript__get-transcript` tool with `include_timestamps: false` to get the raw transcript.
 
-If the content is a YouTube video and extraction fails, retry with yt-dlp mode:
-```bash
-summarize --extract "<source_url_or_path>" --youtube yt-dlp --timeout 5m 2>/dev/null
-```
+**Web article / blog / page** (any other URL):
+Use the `WebFetch` tool with the prompt: "Return the complete text content of this page. Preserve all details, quotes, examples, and structure. Do not summarize."
 
-If extraction returns empty or errors out, tell the user what failed and stop. Don't guess.
+**Local file** (file path):
+Use the `Read` tool to read the file directly.
+
+**PDF file** (`.pdf` path):
+Use the `Read` tool with the `pages` parameter if large.
+
+If fetching fails or returns empty, tell the user what failed and stop. Don't guess.
 
 ### Step 2: Assess content quality
 
