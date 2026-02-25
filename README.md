@@ -4,9 +4,65 @@ A Claude Code skill that extracts durable knowledge — frameworks, methodologie
 
 This is not summarization. This is extraction of transferable intelligence.
 
+## Prerequisites
+
+This skill depends on the [`summarize`](https://github.com/steipete/summarize) CLI for content fetching:
+
+```bash
+# Requires Node.js 22+
+npm install -g @steipete/summarize
+```
+
+**Optional:** For audio/video transcription (YouTube without captions, podcasts), you need a Groq API key:
+
+```bash
+export GROQ_API_KEY=your_key_here
+```
+
+Get one free at [console.groq.com](https://console.groq.com). Not needed for articles, web pages, or YouTube videos with captions.
+
+**Optional:** For YouTube videos where captions aren't available:
+
+```bash
+# macOS
+brew install yt-dlp
+
+# or
+pip install yt-dlp
+```
+
+## Install
+
+```bash
+claude skill add --url https://github.com/wwwcolorcolor/extract
+```
+
+Verify it installed:
+
+```bash
+claude skill list
+```
+
+You should see `extract` in the output.
+
+## Usage
+
+```
+/extract <url>           — extract from a YouTube video, article, or podcast
+/extract <file_path>     — extract from a local file
+```
+
+### Examples
+
+```
+/extract https://www.youtube.com/watch?v=dQw4w9WgXcQ
+/extract https://paulgraham.com/greatwork.html
+/extract ./transcript.txt
+```
+
 ## What it does
 
-Give it a URL (YouTube video, article, podcast) or file path. It pulls the raw content, assesses quality, and extracts structured knowledge across these categories:
+Give it a URL or file path. It pulls the raw content, assesses quality, and extracts structured knowledge across these categories:
 
 - **Mental Models & Frameworks** — decision-making heuristics, expert lenses
 - **Systematic Methods & Processes** — step-by-step techniques, playbooks, workflows
@@ -16,19 +72,6 @@ Give it a URL (YouTube video, article, podcast) or file path. It pulls the raw c
 - **Specific Techniques & Tactics** — immediately applicable, named methods
 
 Shallow content gets called out. Depth of extraction matches depth of source.
-
-## Install
-
-```bash
-claude skill add --url https://github.com/wwwcolorcolor/extract
-```
-
-## Usage
-
-```
-/extract <url>           — extract from a YouTube video, article, or podcast
-/extract <file_path>     — extract from a local file
-```
 
 ## What gets stripped
 
@@ -41,3 +84,14 @@ claude skill add --url https://github.com/wwwcolorcolor/extract
 - Reasoning behind tool/approach choices (selection criteria outlive specific tools)
 - Prediction reasoning chains
 - Historical context explaining why something works the way it does
+
+## Troubleshooting
+
+**"summarize: command not found"**
+Install it: `npm install -g @steipete/summarize`
+
+**YouTube extraction fails**
+Try installing yt-dlp (`brew install yt-dlp`) — some videos need it as a fallback.
+
+**Empty output from audio/video**
+You probably need a `GROQ_API_KEY` for transcription. Get one at [console.groq.com](https://console.groq.com).

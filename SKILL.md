@@ -1,6 +1,12 @@
 ---
 name: extract
-description: Extract knowledge, frameworks, and methodologies from any URL or content
+description: >
+  Extract knowledge, frameworks, and methodologies from any URL or content.
+  Use when: (1) user says "/extract", "extract this", "extract from",
+  (2) user shares a URL or file and wants the key insights pulled out,
+  (3) user wants to learn from a video, article, or podcast without reading/watching the whole thing.
+  NOT for: summarization, news digests, or content that doesn't contain transferable knowledge.
+  Requires: `summarize` CLI (`npm i -g @steipete/summarize`).
 user_invocable: true
 trigger: /extract
 arguments:
