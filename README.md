@@ -34,7 +34,7 @@ pip install yt-dlp
 ## Install
 
 ```bash
-claude skill add --url https://github.com/wwwcolorcolor/extract
+claude skill add --url https://github.com/wwwcolorcolor/extract-skill
 ```
 
 Verify it installed:
