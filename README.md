@@ -29,7 +29,7 @@ Get one free at [console.groq.com](https://console.groq.com).
 ## Install
 
 ```bash
-claude skill add --url https://github.com/wwwcolorcolor/extract-skill
+claude skill add --url https://github.com/catcatcatai/extract-skill
 ```
 
 Verify it installed:
